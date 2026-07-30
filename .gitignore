@@ -1,0 +1,20 @@
+# .gitignore
+# Backend
+target/
+*.class
+firebase-service-account.json
+application-local.yml
+
+# Frontend
+node_modules/
+dist/
+.env.local
+.env*.local
+
+# General
+.DS_Store
+*.log
+.idea/
+.vscode/
+Docs/
+DB-Credentials/

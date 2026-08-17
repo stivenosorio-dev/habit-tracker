@@ -1,7 +1,9 @@
 package com.stivenosorio_dev.habit_tracker_backend.controller;
 
+import com.stivenosorio_dev.habit_tracker_backend.dto.CompleteHabitResponse;
 import com.stivenosorio_dev.habit_tracker_backend.dto.HabitRequest;
 import com.stivenosorio_dev.habit_tracker_backend.dto.HabitResponse;
+import com.stivenosorio_dev.habit_tracker_backend.service.HabitCompletionService;
 import com.stivenosorio_dev.habit_tracker_backend.service.HabitService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,9 +18,11 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("api/habits")
 public class HabitController {
     private HabitService habitService;
+    private final HabitCompletionService habitCompletionService;
 
-    public HabitController(HabitService habitService) {
+    public HabitController(HabitService habitService, HabitCompletionService habitCompletionService) {
         this.habitService = habitService;
+        this.habitCompletionService = habitCompletionService;
     }
 
     @PostMapping
@@ -58,5 +62,12 @@ public class HabitController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/complete")
+    public ResponseEntity<CompleteHabitResponse> completar(@PathVariable String id)
+            throws ExecutionException, InterruptedException {
+        String userId = "temporal-user-id";
+
+        return ResponseEntity.ok(habitCompletionService.completar(userId, id));
+    }
 
 }

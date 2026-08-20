@@ -18,3 +18,5 @@ dist/
 .vscode/
 Docs/
 DB-Credentials/
+
+frontend/

@@ -7,6 +7,8 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.stivenosorio_dev.habit_tracker_backend.model.HabitLog;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -33,5 +35,19 @@ public class HabitLogRepository {
                 .get().get();
 
         return snapshot.isEmpty() ? null : snapshot.getDocuments().get(0).toObject(HabitLog.class);
+    }
+    public List<HabitLog> findByHabitIdAndUserId(String habitId, String userId)
+            throws ExecutionException, InterruptedException {
+        QuerySnapshot snapshot = firestore.collection(COLLECTION)
+                .whereEqualTo("habitId", habitId)
+                .whereEqualTo("userId", userId)
+                .get().get();
+
+        List<HabitLog> result = new ArrayList<>();
+        for (var document : snapshot.getDocuments()) {
+            result.add(document.toObject(HabitLog.class));
+        }
+        result.sort((first, second) -> second.getDate().compareTo(first.getDate()));
+        return result;
     }
 }

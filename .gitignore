@@ -1,4 +1,3 @@
-# .gitignore
 # Backend
 target/
 *.class
@@ -6,6 +5,7 @@ firebase-service-account.json
 application-local.yml
 
 # Frontend
+frontend/
 node_modules/
 dist/
 .env.local
@@ -18,4 +18,3 @@ dist/
 .vscode/
 Docs/
 DB-Credentials/
-frontend/

@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### firebase ###
-habit-tracker-39bfa-firebase-adminsdk-fbsvc-a490bd5144.json
+firebase-service-account.json

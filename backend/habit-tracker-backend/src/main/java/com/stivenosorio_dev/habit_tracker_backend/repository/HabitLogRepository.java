@@ -36,6 +36,19 @@ public class HabitLogRepository {
 
         return snapshot.isEmpty() ? null : snapshot.getDocuments().get(0).toObject(HabitLog.class);
     }
+
+    public HabitLog findByHabitIdAndUserIdAndDate(String habitId, String userId, String date)
+            throws ExecutionException, InterruptedException {
+        QuerySnapshot snapshot = firestore.collection(COLLECTION)
+                .whereEqualTo("habitId", habitId)
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("date", date)
+                .limit(1)
+                .get().get();
+
+        return snapshot.isEmpty() ? null : snapshot.getDocuments().get(0).toObject(HabitLog.class);
+    }
+
     public List<HabitLog> findByHabitIdAndUserId(String habitId, String userId)
             throws ExecutionException, InterruptedException {
         QuerySnapshot snapshot = firestore.collection(COLLECTION)

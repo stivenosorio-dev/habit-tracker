@@ -1,5 +1,6 @@
 package com.stivenosorio_dev.habit_tracker_backend.service;
 import com.stivenosorio_dev.habit_tracker_backend.dto.CompleteHabitResponse;
+import com.stivenosorio_dev.habit_tracker_backend.exception.HabitAlreadyCompletedException;
 import com.stivenosorio_dev.habit_tracker_backend.exception.ResourceNotFoundException;
 import com.stivenosorio_dev.habit_tracker_backend.model.Habit;
 import com.stivenosorio_dev.habit_tracker_backend.model.HabitLog;
@@ -7,7 +8,6 @@ import com.stivenosorio_dev.habit_tracker_backend.model.User;
 import com.stivenosorio_dev.habit_tracker_backend.repository.HabitLogRepository;
 import com.stivenosorio_dev.habit_tracker_backend.repository.HabitRepository;
 import com.stivenosorio_dev.habit_tracker_backend.repository.UserRepository;
-import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,6 +38,16 @@ public class HabitCompletionService {
             throw new ResourceNotFoundException("Hábito no encontrado");
         }
 
+        LocalDate hoy = LocalDate.now();
+        HabitLog logDelDia = habitLogRepository.findByHabitIdAndUserIdAndDate(
+                habitId,
+                userId,
+                hoy.toString()
+        );
+        if (logDelDia != null) {
+            throw new HabitAlreadyCompletedException("El hábito ya fue completado hoy");
+        }
+
         HabitLog ultimoLog = habitLogRepository.findLastByHabitId(habitId);
         LocalDate ultimaFecha = ultimoLog != null ? LocalDate.parse(ultimoLog.getDate()) : null;
 
@@ -55,7 +65,7 @@ public class HabitCompletionService {
         HabitLog nuevoLog = new HabitLog();
         nuevoLog.setHabitId(habitId);
         nuevoLog.setUserId(userId);
-        nuevoLog.setDate(LocalDate.now().toString());
+        nuevoLog.setDate(hoy.toString());
         nuevoLog.setCompleted(true);
         nuevoLog.setXpEarned(xpGanado);
         habitLogRepository.save(nuevoLog);
